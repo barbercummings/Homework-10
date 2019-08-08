@@ -1,1 +1,1 @@
-# Homework-10
+Scraping Mars data to MongoDB. Using Flask to push data to Mars App.
