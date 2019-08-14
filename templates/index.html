@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mission To Mars</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+  <body>
+    <div class="container-fluid">
+      <div class="jumbotron text-center">
+        <h1>Mission to Mars</h1>
+        <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape News Data</a></p>
+      </div>
+      <h2>Latest Mars News</h2>
+      <h3>{{ redplanet.Title_1 }}</h3>
+      <p>{{ redplanet.Paragraph_1 }}</p>
+      <br>
+      <h2>Mars Weather Report</h2>
+      <p>{{ redplanet.mars_weather_3 }}</p>
+      <br>
+      <div>
+        <h2>Featured Mars Image</h2>
+        <div class = "card col-md-12">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8">
+                <img src="{{ redplanet.featured_image }}" alt="mars", width="750" height="500">
+              </div>
+              <div class="card col-md-4">
+                {{ redplanet.mars_table_4 | safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="card col-md-12" style="margin-top: 48px;">
+        <div class="card-body">
+          <h2>Mars Hemispheres</h2>
+          <hr>
+          <div class="row">
+            <div class="col-md-6 col-sm-3">
+              <h4>Cerberus</h4>
+              <img src="{{ redplanet.cerb_image }}" width="600" height="550" class="image-hemi">
+            </div>
+            <div class="col-md-6 col-sm-3">
+              <h4>Schiaparelli</h4>
+              <img src="{{ redplanet.schia_image }}" width="600" height="550" class="image-hemi">
+            </div>
+            <div class="col-md-6 col-sm-3">
+                <h4>Syrtis</h4>
+              <img src="{{ redplanet.syrt_image }}" width="600" height="550" class="image-hemi">
+            </div>
+            <div class="col-md-6 col-sm-3">
+                <h4>Valles</h4>
+              <img src="{{ redplanet.val_image }}" width="600" height="550" class="image-hemi">
+            </div>
+          </div>
+        </div>
+      </div>
+        <footer class="footer">
+          <div class="container">
+            <span class="textz-muted">&copy; Copyright Coding Bootcamp 2019</span>
+          </div>
+        </footer>
+    </body>
+</html>

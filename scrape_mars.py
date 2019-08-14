@@ -2,16 +2,25 @@
 from bs4 import BeautifulSoup
 from splinter import Browser
 import pandas as pd
+import time
+
+# Create init_browser function
 
 def init_browser():
     executable_path = {'executable_path': 'chromedriver.exe'}
-    browser = Browser('chrome', **executable_path, headless=False)
+    return Browser("chrome", **executable_path, headless=False)
+
+# Create scrape_info function
 
 def scrape_info():
     browser = init_browser()
 
+    # mars news scraping
+
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
+
+    time.sleep(1)
 
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
@@ -31,8 +40,12 @@ def scrape_info():
 
     print(f'Title: {news_title}, Paragraph: {news_p}')
 
+    # Mars featured image scraping
+
     url_2 = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     browser.visit(url_2)
+
+    url_2_short = 'https://www.jpl.nasa.gov/'
 
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
@@ -44,7 +57,9 @@ def scrape_info():
     image = image[1]
     image = image.split("'")
     featured_image_url = image[1]
-    featured_image_url
+    mars_img = url_2_short + featured_image_url
+
+    # Mars weather twitter scrape
 
     url_3 = 'https://twitter.com/marswxreport?lang=en'
     browser.visit(url_3)
@@ -56,6 +71,8 @@ def scrape_info():
     mars_weather = soup.find('p', class_='TweetTextSize TweetTextSize--normal js-tweet-text tweet-text').contents[0]
     mars_weather
 
+    # Mars facts table scrape using pandas
+
     url_4 = 'https://space-facts.com/mars/'
     browser.visit(url_4)
 
@@ -63,14 +80,17 @@ def scrape_info():
     tables
 
     df = tables[1]
-    df = df.transpose()
-    header = df.iloc[0]
-    df = df[1:]
-    df.columns = header
+    df = df.set_index(df[0])
+    df = df.drop([0], axis = 1)
+    df = df.rename(columns={1: "Value"})
+    df.index.name='Description'
     df
 
-    html_table = df.to_html()
+    html_table = df.to_html(classes="table table-stripped")
     html_table
+    print(html_table)
+
+    # Mars hemisphere enhanced image scrape
 
     url_5 = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(url_5)
@@ -78,7 +98,7 @@ def scrape_info():
     hemis = ['Cerberus Hemisphere', 'Schiaparelli Hemisphere',
         'Syrtis Major Hemisphere', 'Valles Marineris Hemisphere']
     
-    hemisphare_titles = []
+    hemisphere_titles = []
 
     for name in hemis:
         browser.visit(url_5)
@@ -87,12 +107,31 @@ def scrape_info():
         soup = BeautifulSoup(html, 'html.parser')
         img_url = soup.find('ul').find('li').find('a')['href']
         img_url = f"{img_url}"
-        #hemisphare_titles.append({f"title\": \"{name}\", \"img_url\": \"{img_url}\""})
-        hemisphare_titles.append({"title": name, "img_url": img_url})
+        hemisphere_titles.append({"title": name, "img_url": img_url})
         
-    hemisphare_titles
+    cerb = hemisphere_titles[0]['img_url']
+    schia = hemisphere_titles[1]['img_url']
+    syrt = hemisphere_titles[2]['img_url']
+    val = hemisphere_titles[3]['img_url']
 
-    mars_data = {f'Title_1: {news_title}, Paragraph_1: {news_p}, 
-    featured_image_url_2: {featured_image_url}, mars_weather_3: {mars_weather},
-    mars_table_4: {tables}, mars_table_4: {html_table},
-    mars_titles_5: {hemisphare_titles}'}
+    # Building final dictionary to be sent to Mongo
+
+
+    mars_data = {
+        "Title_1": news_title,
+        "Paragraph_1": news_p,
+        "featured_image": mars_img, 
+        "mars_weather_3": mars_weather,
+        "mars_table_4": html_table, 
+        "cerb_image": cerb,
+        "schia_image": schia,
+        "syrt_image": syrt,
+        "val_image": val
+        }
+
+
+    # Close the browser after scraping
+    browser.quit()
+
+    # Return results
+    return mars_data

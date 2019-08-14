@@ -1,0 +1,44 @@
+h1 {
+    color: blue;
+    font-size: 50
+}
+
+h2 {
+    color: blue;
+    font-size: 30
+}
+
+h3 {
+    color: blue;
+    font-size: 20
+}
+
+title {
+    color: blue;
+    font-size: 80
+}
+
+
+.image-hemi {
+    max-width: 100%;
+}
+
+
+h4 {
+    text-align: center;
+    color: #4aaaa5;
+    font-weight: bold;
+    font-size: 36;
+}
+
+footer {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    border-top: 8px solid #4aaaa5;
+    background-color: rgba(0,0,0,.70);
+    color: white;
+}
